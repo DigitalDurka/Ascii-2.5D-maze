@@ -21,11 +21,10 @@ int nMapWidth = 12;
 
 
 float fFOV = PI / 4.0;
-float fDepth = 13.0f; // Äèñòàíöèÿ ðåéêàñòà
+float fDepth = 13.0f; 
 
 int main() {
 
-	// Ñîçäà¸ì êîíñîëü äëÿ âûâîäà
 	wchar_t* screen = new wchar_t[nScreenWidth * nScreenHeight];
 	HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	SetConsoleActiveScreenBuffer(hConsole);
@@ -42,17 +41,13 @@ int main() {
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
 
-	// Îñíîâíîé öèêë
 	while (true) {
 
-		// Äëÿ áîëåå ïëàâíîãî îòîáðàæåíèÿ èñïîëüçóåì chrono
 		auto tp2 = chrono::system_clock::now();
 		chrono::duration<float> elapsedTime = tp2 - tp1;
 		tp1 = tp2;
 		float fElapsedTime = elapsedTime.count();
 
-
-		// Óïðàâëåíèå (WASD)
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
 			fPlayerA -= (1.5f) * fElapsedTime;
 
@@ -121,8 +116,6 @@ int main() {
 					if (map[nTestY * nMapWidth + nTestX] == '1')
 					{
 						bHitWall = true;
-
-						// Ãðàíèöû áëîêîâ
 						vector<pair<float, float>> p;
 						for (int tx = 0; tx < 2; tx++)
 							for (int ty = 0; ty < 2; ty++)
@@ -148,21 +141,19 @@ int main() {
 				}
 			}
 
-			// Çàòåìíåíèå ñòåí ñâåðõó è ñíèçó + çàòåìíåíèå ñòåí â çàâèñèìîñòè îò ðàññòîÿíèÿ äî íèõ
 			int nCeiling = (float)(nScreenHeight / 2.0) - nScreenHeight / ((float)fDistanceToWall);
 			int nFloor = nScreenHeight - nCeiling;
 
 			short nShade = ' ';
 
-			// Çàäà¸ì îòòåíîê äëÿ ñòåíû â çàâèñèìîñòè îò ðàññòîÿíèÿ äî íåå
-			if (fDistanceToWall <= fDepth / 4.0f)     nShade = 0x2588; // áëèçêî
+			if (fDistanceToWall <= fDepth / 4.0f)     nShade = 0x2588;
 			else if (fDistanceToWall < fDepth / 3.5f) nShade = 0x2593;
 			else if (fDistanceToWall < fDepth / 2.5f) nShade = 0x2592;
 			else if (fDistanceToWall < fDepth)        nShade = 0x2591;
-			else                                      nShade = ' ';    // ñëèøêîì äàëåêî
+			else                                      nShade = ' ';   
 
 			if (bBoundary)                            nShade = '|';
-			if (finish)                               nShade = '~';    // ôèíèø
+			if (finish)                               nShade = '~';
 
 			for (int y = 0; y < nScreenHeight; y++)
 			{
@@ -172,7 +163,6 @@ int main() {
 					screen[y * nScreenWidth + x] = nShade;
 				else
 				{
-					// Çàòåìíåíèå ïîëà
 					float b = 1.0f - (((float)y - nScreenHeight / 2.0f) / ((float)nScreenHeight / 2.0f));
 					if (b < 0.25)      nShade = '@';
 					else if (b < 0.5)  nShade = '#';
