@@ -14,18 +14,18 @@ int nScreenHeight = 64;
 
 float fPlayerX = 1.5f, fPlayerY = 1.5f, fPlayerA = PI/2.;
 
-float start_x = 1.f, start_y = 1.f;
+float start_x = 1.5 f, start_y = 1.5 f;
 
 int nMapHeight = 12;
 int nMapWidth = 12;
 
 
 float fFOV = PI / 4.0;
-float fDepth = 13.0f; // Дистанция рейкаста
+float fDepth = 13.0f; // Г„ГЁГ±ГІГ Г­Г¶ГЁГї Г°ГҐГ©ГЄГ Г±ГІГ 
 
 int main() {
 
-	// Создаём консоль для вывода
+	// Г‘Г®Г§Г¤Г ВёГ¬ ГЄГ®Г­Г±Г®Г«Гј Г¤Г«Гї ГўГ»ГўГ®Г¤Г 
 	wchar_t* screen = new wchar_t[nScreenWidth * nScreenHeight];
 	HANDLE hConsole = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
 	SetConsoleActiveScreenBuffer(hConsole);
@@ -42,17 +42,17 @@ int main() {
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
 
-	// Основной цикл
+	// ГЋГ±Г­Г®ГўГ­Г®Г© Г¶ГЁГЄГ«
 	while (true) {
 
-		// Для более плавного отображения используем chrono
+		// Г„Г«Гї ГЎГ®Г«ГҐГҐ ГЇГ«Г ГўГ­Г®ГЈГ® Г®ГІГ®ГЎГ°Г Г¦ГҐГ­ГЁГї ГЁГ±ГЇГ®Г«ГјГ§ГіГҐГ¬ chrono
 		auto tp2 = chrono::system_clock::now();
 		chrono::duration<float> elapsedTime = tp2 - tp1;
 		tp1 = tp2;
 		float fElapsedTime = elapsedTime.count();
 
 
-		// Управление (WASD)
+		// Г“ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ (WASD)
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
 			fPlayerA -= (1.5f) * fElapsedTime;
 
@@ -122,7 +122,7 @@ int main() {
 					{
 						bHitWall = true;
 
-						// Границы блоков
+						// ГѓГ°Г Г­ГЁГ¶Г» ГЎГ«Г®ГЄГ®Гў
 						vector<pair<float, float>> p;
 						for (int tx = 0; tx < 2; tx++)
 							for (int ty = 0; ty < 2; ty++)
@@ -148,21 +148,21 @@ int main() {
 				}
 			}
 
-			// Затемнение стен сверху и снизу + затемнение стен в зависимости от расстояния до них
+			// Г‡Г ГІГҐГ¬Г­ГҐГ­ГЁГҐ Г±ГІГҐГ­ Г±ГўГҐГ°ГµГі ГЁ Г±Г­ГЁГ§Гі + Г§Г ГІГҐГ¬Г­ГҐГ­ГЁГҐ Г±ГІГҐГ­ Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ Г°Г Г±Г±ГІГ®ГїГ­ГЁГї Г¤Г® Г­ГЁГµ
 			int nCeiling = (float)(nScreenHeight / 2.0) - nScreenHeight / ((float)fDistanceToWall);
 			int nFloor = nScreenHeight - nCeiling;
 
 			short nShade = ' ';
 
-			// Задаём оттенок для стены в зависимости от расстояния до нее
-			if (fDistanceToWall <= fDepth / 4.0f)     nShade = 0x2588; // близко
+			// Г‡Г Г¤Г ВёГ¬ Г®ГІГІГҐГ­Г®ГЄ Г¤Г«Гї Г±ГІГҐГ­Г» Гў Г§Г ГўГЁГ±ГЁГ¬Г®Г±ГІГЁ Г®ГІ Г°Г Г±Г±ГІГ®ГїГ­ГЁГї Г¤Г® Г­ГҐГҐ
+			if (fDistanceToWall <= fDepth / 4.0f)     nShade = 0x2588; // ГЎГ«ГЁГ§ГЄГ®
 			else if (fDistanceToWall < fDepth / 3.5f) nShade = 0x2593;
 			else if (fDistanceToWall < fDepth / 2.5f) nShade = 0x2592;
 			else if (fDistanceToWall < fDepth)        nShade = 0x2591;
-			else                                      nShade = ' ';    // слишком далеко
+			else                                      nShade = ' ';    // Г±Г«ГЁГёГЄГ®Г¬ Г¤Г Г«ГҐГЄГ®
 
 			if (bBoundary)                            nShade = '|';
-			if (finish)                               nShade = '~';    // финиш
+			if (finish)                               nShade = '~';    // ГґГЁГ­ГЁГё
 
 			for (int y = 0; y < nScreenHeight; y++)
 			{
@@ -172,7 +172,7 @@ int main() {
 					screen[y * nScreenWidth + x] = nShade;
 				else
 				{
-					// Затемнение пола
+					// Г‡Г ГІГҐГ¬Г­ГҐГ­ГЁГҐ ГЇГ®Г«Г 
 					float b = 1.0f - (((float)y - nScreenHeight / 2.0f) / ((float)nScreenHeight / 2.0f));
 					if (b < 0.25)      nShade = '@';
 					else if (b < 0.5)  nShade = '#';
